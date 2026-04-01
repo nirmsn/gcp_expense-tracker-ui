@@ -1,0 +1,24 @@
+name: SonarQube Scan
+
+on:
+  push:
+    branches:
+      - main
+jobs:
+  sonar:
+    name: Sonar Qube Analysis
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checout code
+        uses: action/checkout/@3
+
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v2
+        with:
+          args: >
+            --Dsonar.projectKey=nirmal-test
+          
+        env:
+          SONAR_TOKEN: ${{secret.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{secret.SONAR_HOST_URL }}
