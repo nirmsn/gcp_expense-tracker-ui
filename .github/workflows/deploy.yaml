@@ -38,4 +38,4 @@ jobs:
     # push Docker image
     - name: PUSH Image
       run : |
-        docker push $REGION-docker.pkg.dev/$PROJECT_ID/$REPO/$IMAGES:${{ github.sha}}
+        docker push $REGION-docker.pkg.dev/$PROJECT_ID/$REPO/$IMAGE:${{ github.sha}}
