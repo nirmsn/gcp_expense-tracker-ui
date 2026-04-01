@@ -1,11 +1,14 @@
-FROM node:20-alpine
+# stage 1 Build
+FROM node:20-alpine AS builder 
 WORKDIR /app
-COPY package.json ./
+COPY package.json  ./
 RUN npm install
 COPY . .
-RUN addgroup -S app && adduser -S app -G app
-COPY --chown=app:app . .
-USER app
-EXPOSE 3000
-ENV CI=false
-CMD ["npm","start"]
+RUN npm run build
+
+# stage 2 Build
+FROM nginx:alpine
+COPY --from=builder /app/build /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80
+CMD ["nginx","-g","daemon off;"]
