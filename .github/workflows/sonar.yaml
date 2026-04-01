@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: checout code
-        uses: action/checkout/@3
+        uses: actions/checkout/@3
 
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v2
