@@ -3,7 +3,7 @@ name: Build and push to GCP
 on:
   push:
     branches:
-      -main
+      - main
 
 env:
   PROJECT_ID: ${{secrets.PROJECT_ID}}
