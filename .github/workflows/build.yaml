@@ -31,7 +31,7 @@ jobs:
       run: |
         gcloud auth configure-docker $REGION-docker.pkg.dev
 
-    # Build docker Image
+    # Build docker Image 
     - name: BUild Image
       run: |
         docker build -t $REGION-docker.pkg.dev/$PROJECT_ID/$REPO/$IMAGE:${{ github.sha}} .
