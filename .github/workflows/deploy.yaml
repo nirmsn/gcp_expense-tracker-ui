@@ -9,9 +9,9 @@ on:
 env:
   PROJECT_ID: ${{ secrets.PROJECT_ID }}
   REGION: us-central1
-  SERVICE: rect-nginx
-  REPO: my-repo
-  IMAGE: rect-nginx
+  SERVICE: expense-ui-prod
+  REPO: my-repo-prod
+  IMAGE: expense-ui-prod
 
 jobs:
   deploy:
