@@ -18,6 +18,8 @@ jobs:
     if: ${{github.event.workflow_run.conclusion == 'success'}}
     runs-on: self-hosted
 
+    environment: production
+
     steps:
       - name: Auth to GCP
         uses: google-github-actions/auth@v2
@@ -29,5 +31,5 @@ jobs:
           gcloud run deploy $SERVICE \
             --image $REGION-docker.pkg.dev/$PROJECT_ID/$REPO/$IMAGE:${{ github.sha }} \
             --region $REGION \
-            --platform managed \
+            --platform managed \ 
             --allow-unauthenticated
