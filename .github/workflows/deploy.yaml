@@ -1,4 +1,4 @@
-name: Deploy
+name: Deploy to Production
 
 on:
   workflow_run:
@@ -25,11 +25,24 @@ jobs:
         uses: google-github-actions/auth@v2
         with:
           credentials_json: '${{ secrets.GCP_SA_KEY }}'
-
-      - name: Deploy to Cloud Run
+      
+       # 🔹 Step 1: Deploy WITHOUT traffic
+      - name: Deploy new revision (no traffic)
         run: |
           gcloud run deploy $SERVICE \
             --image $REGION-docker.pkg.dev/$PROJECT_ID/$REPO/$IMAGE:${{ github.sha }} \
             --region $REGION \
-            --platform managed \ 
+            --platform managed \
+            --no-traffic \
             --allow-unauthenticated
+      
+      # 🔹 Step 2: Shift 10% traffic (Canary)  
+      - name: Wait before full rollout
+        run: sleep 60
+
+      # 🔹 Step 4: Promote to 100%
+      - name: Promote to full traffic
+        run: |
+          gcloud run services update-traffic $SERVICE \
+            --to-latest \
+            --region $REGION
