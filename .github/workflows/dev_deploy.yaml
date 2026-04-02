@@ -1,14 +1,14 @@
 name: Dev Deploy
 
 on:
- push:
-  branches:
-    - dev
+  push:
+    branches:
+      - dev
 
 env:
   PROJECT_ID: ${{ secrets.PROJECT_ID }}
   REGION: us-central1
-  SERVICE: expense-ui-dev
+  SERVICE:  expense-ui-dev
   REPO: my-repo-dev
   IMAGE: expense-ui-dev
 
@@ -18,7 +18,7 @@ jobs:
     runs-on: self-hosted
 
     steps:
-      - name: checkout code
+      - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Auth to GCP
@@ -27,24 +27,21 @@ jobs:
           credentials_json: '${{ secrets.GCP_SA_KEY }}'
 
       - name: Configure Docker
-          run: |
-            gcloud auth configure-docker $REGION-docker.pkg.dev
+        run: |
+          gcloud auth configure-docker $REGION-docker.pkg.dev
 
-      # Build docker Image
-      - name: BUild Image
-          run: |
-            docker build -t $REGION-docker.pkg.dev/$PROJECT_ID/$REPO/$IMAGE:${{ github.sha}} .
+      - name: Build Image
+        run: |
+          docker build -t $REGION-docker.pkg.dev/$PROJECT_ID/$REPO/$IMAGE:dev-${{ github.sha }} .
 
-    # push Docker image
-      - name: PUSH Image
-          run : |
-           docker push $REGION-docker.pkg.dev/$PROJECT_ID/$REPO/$IMAGE:${{ github.sha}}
-
+      - name: Push Image
+        run: |
+          docker push $REGION-docker.pkg.dev/$PROJECT_ID/$REPO/$IMAGE:dev-${{ github.sha }}
 
       - name: Deploy to Cloud Run (DEV)
         run: |
           gcloud run deploy $SERVICE \
-            --image $REGION-docker.pkg.dev/$PROJECT_ID/$REPO/$IMAGE:${{ github.sha }} \
+            --image $REGION-docker.pkg.dev/$PROJECT_ID/$REPO/$IMAGE:dev-${{ github.sha }} \
             --region $REGION \
             --platform managed \
             --allow-unauthenticated
