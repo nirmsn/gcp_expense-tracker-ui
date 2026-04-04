@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: expense-ui
+  namespace: expense-ns
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: expense-ui
+  template:
+    metadata:
+      labels:
+        app: expense-ui
+    spec:
+      imagePullSecrets:
+      - name: gcp-secret
+      containers:
+      - name: expense-ui
+        image: us-central1-docker.pkg.dev/ivoxa-form-dev/my-repo-dev/expense-ui-dev@sha256:a0856d5c35ad4837f6c37b5711a85fb4e3e6d30967e44630a089a1a3b08cf514
+        ports:
+        - containerPort: 80
