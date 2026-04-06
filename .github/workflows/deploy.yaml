@@ -1,0 +1,48 @@
+name: Deploy to Production
+
+on:
+  workflow_run:
+    workflows: ["Build and push to GCP"]
+    types:
+      - completed
+
+env:
+  PROJECT_ID: ${{ secrets.PROJECT_ID }}
+  REGION: us-central1
+  SERVICE: expense-ui-prod
+  REPO: my-repo-prod
+  IMAGE: expense-ui-prod
+
+jobs:
+  deploy:
+    if: ${{github.event.workflow_run.conclusion == 'success'}}
+    runs-on: ubuntu-latest
+
+    environment: production
+
+  #  steps:
+  #    - name: Auth to GCP
+  #     uses: google-github-actions/auth@v2
+  #     with:
+  #        credentials_json: '${{ secrets.GCP_SA_KEY }}'
+      
+  #    # 🔹 Step 1: Deploy WITHOUT traffic
+ #     - name: Deploy new revision (no traffic)
+ #       run: |
+  #        gcloud run deploy $SERVICE \
+  #          --image $REGION-docker.pkg.dev/$PROJECT_ID/$REPO/$IMAGE:${{ github.sha }} \
+  #          --region $REGION \
+   #         --platform managed \
+   #         --no-traffic \
+  #          --allow-unauthenticated
+      
+      # 🔹 Step 2: Shift 10% traffic (Canary)  
+  #    - name: Wait before full rollout
+   #     run: sleep 60
+
+      # 🔹 Step 4: Promote to 100%
+  #    - name: Promote to full traffic
+   #     run: |
+   #       gcloud run services update-traffic $SERVICE \
+   #         --to-latest \
+    #        --region $REGION
