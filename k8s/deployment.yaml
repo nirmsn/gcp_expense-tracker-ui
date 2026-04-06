@@ -14,9 +14,26 @@ spec:
         app: expense-ui
     spec:
       imagePullSecrets:
-      - name: gcp-secret
+        - name: gcp-secret
       containers:
-      - name: expense-ui
-        image: us-central1-docker.pkg.dev/ivoxa-form-dev/my-repo-dev/expense-ui-dev@sha256:a0856d5c35ad4837f6c37b5711a85fb4e3e6d30967e44630a089a1a3b08cf514
-        ports:
-        - containerPort: 80
+        - name: expense-ui
+          image: us-central1-docker.pkg.dev/ivoxa-form-dev/my-repo-prod/expense-ui-prod:a758273987bcc7ee2fad6bb0f1df36565ac0792c
+          ports:
+            - containerPort: 8080
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8080  
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          envFrom:
+            - configMapRef:
+                name: expense-ui-config
+            - secretRef:
+                name: expense-ui-secret
