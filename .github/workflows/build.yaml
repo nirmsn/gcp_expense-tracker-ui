@@ -1,10 +1,16 @@
 name: Build and push to GCP
 
+## for sonar cube
+#on:
+#  workflow_run:
+#    workflows: ["SonarQube Scan"]
+#    types:
+#      - completed
+
 on:
-  workflow_run:
-    workflows: ["SonarQube Scan"]
-    types:
-      - completed
+  push:
+    branches:
+      - main
 
 env:
   PROJECT_ID: ${{secrets.PROJECT_ID}}

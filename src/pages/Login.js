@@ -28,7 +28,7 @@ export default function Login() {
   return (
     <div style={s.page}>
       <div style={s.card}>
-        <h1 style={s.title}>💸 Expense Tracker</h1>
+        <h1 style={s.title}>💸 Nirmal Expense Tracker</h1>
         <p style={s.sub}>Sign in to your account</p>
         {error && <div style={s.error}>{error}</div>}
         <form onSubmit={handleSubmit}>
