@@ -1,6 +1,6 @@
 name: Build and push to GCP
 
-## for sonar cube
+## for sonar cube ingnore
 #on:
 #  workflow_run:
 #    workflows: ["SonarQube Scan"]
