@@ -19,7 +19,34 @@ jobs:
     runs-on: ubuntu-latest
 
     environment: production
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
+      - name: Auth to GCP
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: '${{ secrets.GCP_SA_KEY }}'
+
+      - name: Configure Docker
+        run: |
+          gcloud auth configure-docker $REGION-docker.pkg.dev
+
+      - name: Build Image
+        run: |
+          docker build -t $REGION-docker.pkg.dev/$PROJECT_ID/$REPO/$IMAGE:dev-${{ github.sha }} .
+
+      - name: Push Image
+        run: |
+          docker push $REGION-docker.pkg.dev/$PROJECT_ID/$REPO/$IMAGE:dev-${{ github.sha }}
+
+      - name: Deploy to Cloud Run (DEV)
+        run: |
+          gcloud run deploy $SERVICE \
+            --image $REGION-docker.pkg.dev/$PROJECT_ID/$REPO/$IMAGE:dev-${{ github.sha }} \
+            --region $REGION \
+            --platform managed \
+            --allow-unauthenticated
   #  steps:
   #    - name: Auth to GCP
   #     uses: google-github-actions/auth@v2
