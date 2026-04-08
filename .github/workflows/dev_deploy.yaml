@@ -8,9 +8,11 @@ on:
 env:
   PROJECT_ID: ${{ secrets.PROJECT_ID }}
   REGION: us-central1
-  SERVICE:  expense-ui-dev
+  CLUSTER: nirmal
+  CLUSTER_ZONE: us-central1-a
   REPO: my-repo-dev
   IMAGE: expense-ui-dev
+  NAMESPACE: expense-dev
 
 jobs:
   build:
@@ -21,27 +23,48 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      #  Authenticate to GCP
       - name: Auth to GCP
         uses: google-github-actions/auth@v2
         with:
           credentials_json: '${{ secrets.GCP_SA_KEY }}'
+      
+      #  Setup gcloud
+      - name: set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
 
+      #  Install plugin 
+      - name: Install GKE auth plugin
+        run: |
+          gcloud components install gke-gcloud-auth-plugin --quiet
+
+      # 4. Enable plugin ✅
+      - name: Enable plugin
+        run: |
+          echo "USE_GKE_GCLOUD_AUTH_PLUGIN=True" >> $GITHUB_ENV
+
+
+      #  Connect to GKE
+      - name:  Get GKE Crdentials
+        run: |
+          gcloud container clusters get-credentials $CLUSTER --zone $CLUSTER_ZONE --project $PROJECT_ID
+
+      # COnfigure Docker
       - name: Configure Docker
         run: |
           gcloud auth configure-docker $REGION-docker.pkg.dev
-
+    
+      # Build Image
       - name: Build Image
         run: |
           docker build -t $REGION-docker.pkg.dev/$PROJECT_ID/$REPO/$IMAGE:dev-${{ github.sha }} .
 
+      # Push Image
       - name: Push Image
         run: |
           docker push $REGION-docker.pkg.dev/$PROJECT_ID/$REPO/$IMAGE:dev-${{ github.sha }}
 
-      - name: Deploy to Cloud Run (DEV)
+      #  Deploy using Helm
+      - name:  Helm Upgrade (Deploy)
         run: |
-          gcloud run deploy $SERVICE \
-            --image $REGION-docker.pkg.dev/$PROJECT_ID/$REPO/$IMAGE:dev-${{ github.sha }} \
-            --region $REGION \
-            --platform managed \
-            --allow-unauthenticated
+          helm upgrade --install expense-dev ./k8s/expense-chart --namespace $NAMESPACE --create-namespace -f ./k8s/expense-chart/dev-values.yaml --set image.tag=dev-${{ github.sha }}
