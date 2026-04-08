@@ -17,7 +17,7 @@ spec:
         - name: gcp-secret
       containers:
         - name: expense-ui
-          image: us-central1-docker.pkg.dev/ivoxa-form-dev/my-repo-prod/expense-ui-prod:a758273987bcc7ee2fad6bb0f1df36565ac0792c
+          image: us-central1-docker.pkg.dev/ivoxa-form-dev/my-repo-prod/expense-ui-prod:6bef98f7af5b978e963d6f45cd077ed77243b84b
           ports:
             - containerPort: 8080
           livenessProbe:
@@ -29,7 +29,7 @@ spec:
           readinessProbe:
             httpGet:
               path: /
-              port: 8080  
+              port: 8080
             initialDelaySeconds: 5
             periodSeconds: 10
           envFrom:
