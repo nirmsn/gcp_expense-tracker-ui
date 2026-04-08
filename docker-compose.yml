@@ -54,7 +54,7 @@ services:
   # ── React UI ───────────────────────────────────────────
   frontend:
     build:
-      context: .
+      context: ./frontend
       dockerfile: Dockerfile
     image: expense-frontend:local
     container_name: expense-frontend

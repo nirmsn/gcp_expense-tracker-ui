@@ -44,6 +44,49 @@ def _parse_body():
 @feed_bp.post("/")
 @jwt_required()
 def create_expense():
+    """Create a new expense.
+    ---
+    tags:
+      - Expenses
+    security:
+      - BearerAuth: []
+    parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/ExpenseInput'
+    responses:
+      201:
+        description: Expense created
+        schema:
+          $ref: '#/definitions/Expense'
+      400:
+        description: Validation error
+      401:
+        description: Missing or invalid token
+    definitions:
+      ExpenseInput:
+        type: object
+        required: [title, amount, expense_date]
+        properties:
+          title:
+            type: string
+            example: Office lunch
+          amount:
+            type: number
+            example: 250.00
+          category_id:
+            type: integer
+            example: 1
+          expense_date:
+            type: string
+            format: date
+            example: '2026-04-08'
+          note:
+            type: string
+            example: Team lunch
+    """
     uid = _current_user_id()
     payload, err = _parse_body()
     if err:
@@ -59,6 +102,34 @@ def create_expense():
 @feed_bp.put("/<int:expense_id>")
 @jwt_required()
 def update_expense(expense_id):
+    """Update an existing expense.
+    ---
+    tags:
+      - Expenses
+    security:
+      - BearerAuth: []
+    parameters:
+      - in: path
+        name: expense_id
+        type: integer
+        required: true
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/ExpenseInput'
+    responses:
+      200:
+        description: Expense updated
+        schema:
+          $ref: '#/definitions/Expense'
+      400:
+        description: Validation error
+      401:
+        description: Missing or invalid token
+      404:
+        description: Expense not found
+    """
     uid     = _current_user_id()
     expense = Expense.query.filter_by(id=expense_id, user_id=uid).first_or_404()
 
@@ -76,6 +147,25 @@ def update_expense(expense_id):
 @feed_bp.delete("/<int:expense_id>")
 @jwt_required()
 def delete_expense(expense_id):
+    """Delete an expense.
+    ---
+    tags:
+      - Expenses
+    security:
+      - BearerAuth: []
+    parameters:
+      - in: path
+        name: expense_id
+        type: integer
+        required: true
+    responses:
+      200:
+        description: Expense deleted
+      401:
+        description: Missing or invalid token
+      404:
+        description: Expense not found
+    """
     uid     = _current_user_id()
     expense = Expense.query.filter_by(id=expense_id, user_id=uid).first_or_404()
     db.session.delete(expense)
