@@ -64,9 +64,7 @@ services:
     ports:
       - "8080:8080"
     environment:
-      REACT_APP_AUTH_URL: http://localhost:5000/api/auth
-      REACT_APP_FEED_URL: http://localhost:5000/api/expenses/feed
-      REACT_APP_FETCH_URL: http://localhost:5000/api/expenses/fetch
+      BACKEND_URL: http://35.224.13.107:5000
 
 volumes:
   mysql_data:
