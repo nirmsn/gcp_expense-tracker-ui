@@ -1,0 +1,12 @@
+grafana:
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    hosts:
+      - grafana.ivoxa.ai
+    tls:
+      - secretName: grafana-tls
+        hosts:
+          - grafana.ivoxa.ai
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
