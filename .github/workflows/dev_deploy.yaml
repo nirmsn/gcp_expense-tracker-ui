@@ -9,7 +9,7 @@ env:
   PROJECT_ID: ${{ secrets.PROJECT_ID }}
   REGION: us-central1
   CLUSTER: nirmal
-  CLUSTER_ZONE: us-central1
+  CLUSTER_ZONE: us-central1-a
   REPO: my-repo-dev
   IMAGE: expense-ui-dev
   NAMESPACE: expense-dev
