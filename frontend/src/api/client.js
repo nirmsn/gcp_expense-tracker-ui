@@ -1,10 +1,8 @@
 import axios from "axios";
 
-// In local dev these point to nginx proxy
-// In production these are set via environment variables at build time
-const AUTH_URL    = process.env.REACT_APP_AUTH_URL    || "/api/auth";
-const FEED_URL    = process.env.REACT_APP_FEED_URL    || "/api/expenses/feed";
-const FETCH_URL   = process.env.REACT_APP_FETCH_URL   || "/api/expenses/fetch";
+const AUTH_URL    = process.env.REACT_APP_AUTH_URL    || "https://api-dev.ivoxa.ai/auth";
+const FEED_URL    = process.env.REACT_APP_FEED_URL    || "https://api-dev.ivoxa.ai/expenses/feed";
+const FETCH_URL   = process.env.REACT_APP_FETCH_URL   || "https://api-dev.ivoxa.ai/expenses/fetch";
 
 function makeClient(baseURL) {
   const client = axios.create({
