@@ -7,5 +7,4 @@ metadata:
 data:
   REACT_APP_EN: "dev"
   REACT_APP_API_URL: "http://dummy-api"
-  BACKEND_URL: "http://expense-backend-service"
 
