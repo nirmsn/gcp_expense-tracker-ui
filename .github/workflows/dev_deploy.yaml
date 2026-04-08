@@ -11,7 +11,8 @@ env:
   CLUSTER: nirmal
   CLUSTER_ZONE: us-central1-a
   REPO: my-repo-dev
-  IMAGE: expense-ui-dev
+  UI_IMAGE: expense-ui-dev
+  API_IMAGE: expense-api-dev
   NAMESPACE: expense-dev
 
 jobs:
@@ -54,17 +55,24 @@ jobs:
         run: |
           gcloud auth configure-docker $REGION-docker.pkg.dev
     
-      # Build Image
+      # Build frontend image
       - name: Build Image
         run: |
-          docker build -t $REGION-docker.pkg.dev/$PROJECT_ID/$REPO/$IMAGE:dev-${{ github.sha }} .
+          docker build -t $REGION-docker.pkg.dev/$PROJECT_ID/$REPO/$UI_IMAGE:dev-${{ github.sha }} ./frontend
 
-      # Push Image
+      # Push frontend Image
       - name: Push Image
         run: |
-          docker push $REGION-docker.pkg.dev/$PROJECT_ID/$REPO/$IMAGE:dev-${{ github.sha }}
+          docker push $REGION-docker.pkg.dev/$PROJECT_ID/$REPO/$UI_IMAGE:dev-${{ github.sha }}
 
-      #  Deploy using Helm
-      - name:  Helm Upgrade (Deploy)
+      # Build API image
+      - name: Build Image
         run: |
-          helm upgrade --install expense-dev ./k8s/expense-chart --namespace $NAMESPACE --create-namespace -f ./k8s/expense-chart/dev-values.yaml --set image.tag=dev-${{ github.sha }}
+          docker build -t $REGION-docker.pkg.dev/$PROJECT_ID/$REPO/$API_IMAGE:dev-${{ github.sha }} ./backend
+
+      # Push API Image
+      - name: Push Image
+        run: |
+          docker push $REGION-docker.pkg.dev/$PROJECT_ID/$REPO/$API_IMAGE:dev-${{ github.sha }}
+
+     
