@@ -55,8 +55,4 @@ jobs:
       #  Deploy using Helm
       - name:  Helm Upgrade (Deploy)
         run: |
-          helm upgrade --install expense-dev ./k8s/expense-chart \
-            --namespace $NAMESPACE \  
-            --create-namespace \
-            -f ./k8s/expense-chart/dev-values.yaml \
-            --set image.tag=dev-${{ github.sha }}
+          helm upgrade --install expense-dev ./k8s/expense-chart --namespace $NAMESPACE --create-namespace -f ./k8s/expense-chart/dev-values.yaml --set image.tag=dev-${{ github.sha }}
