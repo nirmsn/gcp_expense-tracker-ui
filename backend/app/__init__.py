@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask
 from flask_cors import CORS
 from flasgger import Swagger
@@ -50,7 +52,8 @@ def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
 
-    CORS(app, resources={r"/api/*": {"origins": "*"}})
+    allowed_origins = os.getenv("CORS_ORIGINS", "https://dev.ivoxa.ai").split(",")
+    CORS(app, resources={r"/api/*": {"origins": allowed_origins}})
 
     db.init_app(app)
     jwt.init_app(app)
