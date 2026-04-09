@@ -52,6 +52,10 @@ def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
 
+    @app.get("/health")
+    def health():
+        return {"status": "ok"}, 200
+
     allowed_origins = os.getenv("CORS_ORIGINS", "https://dev.ivoxa.ai").split(",")
     CORS(app, resources={r"/*": {"origins": allowed_origins}})
 
