@@ -2,12 +2,13 @@ replicaCount: 1
 
 image:
   repository: us-central1-docker.pkg.dev/ivoxa-form-dev/my-repo-dev/expense-ui-dev
-  tag: "dev-ef95a29123358ebcc0772a0b8e4913b29e179689"
+  tag: "dev-869d5f9712ee79a3d85155276d95338764067162"
   pullPolicy: Always
 
 imagePullSecrets:
   - name: gcp-secret
 
+# service
 service:
   type: ClusterIP
   port: 80

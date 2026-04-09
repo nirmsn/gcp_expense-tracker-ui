@@ -2,19 +2,20 @@ replicaCount: 1
 
 image:
   repository: us-central1-docker.pkg.dev/ivoxa-form-dev/my-repo-dev/expense-ui-dev
-  tag: "dev-85cbec7d6362bcd827b7145294c79991f08d465e"
+  tag: "dev-ef95a29123358ebcc0772a0b8e4913b29e179689"
   pullPolicy: Always
 
 imagePullSecrets:
   - name: gcp-secret
 
+# service
 service:
   type: ClusterIP
   port: 80
-  targetPort: 8080
+  targetPort: 5000
 
 container:
-  port: 8080 
+  port: 5000 
     
 
 livenessProbe: null
@@ -24,7 +25,7 @@ ingress:
   enabled: true
   className: nginx
   hosts:
-    - host: dev.ivoxa.ai
+    - host: api-dev.ivoxa.ai
       paths:
         - path: /
           pathType: Prefix
@@ -34,8 +35,8 @@ ingress:
 
   tls:
     - hosts:
-        - dev.ivoxa.ai
-      secretName: dev-ivoxa-tls
+        - api-dev.ivoxa.ai
+      secretName: api-dev-ivoxa-tls
 
 autoscaling:
   enabled: true
