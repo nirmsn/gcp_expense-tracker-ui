@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: us-central1-docker.pkg.dev/ivoxa-form-dev/my-repo-dev/expense-ui-dev
-  tag: "dev-869d5f9712ee79a3d85155276d95338764067162"
+  tag: "dev-45773fa465e930be0bd9ad059d4933a4392573ac"
   pullPolicy: Always
 
 imagePullSecrets:

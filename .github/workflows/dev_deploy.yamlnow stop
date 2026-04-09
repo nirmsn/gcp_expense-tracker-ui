@@ -78,10 +78,10 @@ jobs:
       #  Deploy using Helm
       - name:  Helm Frontend Upgrade (Deploy)
         run: |
-          helm upgrade --install expense-frontend-dev .\k8s\expense-frontend-chart --namespace $NAMESPACE --create-namespace -f .\k8s\expense-frontend-chart\dev-values.yaml --set image.tag=dev-${{ github.sha }}
+          helm upgrade --install expense-frontend-dev ./k8s/expense-frontend-chart --namespace $NAMESPACE --create-namespace -f ./k8s/expense-frontend-chart/dev-values.yaml --set image.tag=dev-${{ github.sha }}
 
       - name:  Helm Backend Upgrade (Deploy)
         run: |
-          helm upgrade --install expense-backend-dev .\k8s\expense-backend-chart --namespace $NAMESPACE --create-namespace -f .\k8s\expense-backend-chart\dev-values.yaml --set image.tag=dev-${{ github.sha }}
+          helm upgrade --install expense-backend-dev ./k8s/expense-backend-chart --namespace $NAMESPACE --create-namespace -f ./k8s/expense-backend-chart/dev-values.yaml --set image.tag=dev-${{ github.sha }}
 
 
