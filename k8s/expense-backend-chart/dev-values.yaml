@@ -38,6 +38,22 @@ ingress:
         - api-dev.ivoxa.ai
       secretName: api-dev-ivoxa-tls
 
+env:
+  - name: MYSQL_HOST
+    value: "mysql"
+  - name: MYSQL_PORT
+    value: "3306"
+  - name: DB_PORT
+    value: "3306"
+  - name: MYSQL_USER
+    value: "expense_user"
+  - name: MYSQL_PASSWORD
+    value: "expense_pass"
+  - name: MYSQL_DB
+    value: "expense_db"
+  - name: CORS_ORIGINS
+    value: "https://dev.ivoxa.ai"
+
 autoscaling:
   enabled: true
   minReplicas: 1
