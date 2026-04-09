@@ -56,23 +56,32 @@ jobs:
           gcloud auth configure-docker $REGION-docker.pkg.dev
     
       # Build frontend image
-      - name: Build Image
+      - name: Build Frontend Image
         run: |
           docker build -t $REGION-docker.pkg.dev/$PROJECT_ID/$REPO/$UI_IMAGE:dev-${{ github.sha }} ./frontend
 
       # Push frontend Image
-      - name: Push Image
+      - name: Push Frontend Image
         run: |
           docker push $REGION-docker.pkg.dev/$PROJECT_ID/$REPO/$UI_IMAGE:dev-${{ github.sha }}
 
       # Build API image
-      - name: Build Image
+      - name: Build Backend Image
         run: |
           docker build -t $REGION-docker.pkg.dev/$PROJECT_ID/$REPO/$API_IMAGE:dev-${{ github.sha }} ./backend
 
       # Push API Image
-      - name: Push Image
+      - name: Push Backend Image
         run: |
           docker push $REGION-docker.pkg.dev/$PROJECT_ID/$REPO/$API_IMAGE:dev-${{ github.sha }}
 
-     
+      #  Deploy using Helm
+      - name:  Helm Frontend Upgrade (Deploy)
+        run: |
+          helm upgrade --install expense-frontend-dev .\k8s\expense-frontend-chart --namespace $NAMESPACE --create-namespace -f .\k8s\expense-frontend-chart\dev-values.yaml --set image.tag=dev-${{ github.sha }}
+
+      - name:  Helm Backend Upgrade (Deploy)
+        run: |
+          helm upgrade --install expense-backend-dev .\k8s\expense-backend-chart --namespace $NAMESPACE --create-namespace -f .\k8s\expense-backend-chart\dev-values.yaml --set image.tag=dev-${{ github.sha }}
+
+
