@@ -30,8 +30,8 @@ SWAGGER_TEMPLATE = {
         "title": "Expense Tracker API",
         "description": (
             "REST API for the Expense Tracker application.\n\n"
-            "**Auth:** All `/api/expenses/*` endpoints require a Bearer JWT token.\n"
-            "Obtain a token via `POST /api/auth/login` or `POST /api/auth/register`, "
+            "**Auth:** All `/expenses/*` endpoints require a Bearer JWT token.\n"
+            "Obtain a token via `POST /auth/login` or `POST /auth/register`, "
             "then click **Authorize** and enter `Bearer <token>`."
         ),
         "version": "1.0.0",
@@ -53,15 +53,15 @@ def create_app(config_class=Config):
     app.config.from_object(config_class)
 
     allowed_origins = os.getenv("CORS_ORIGINS", "https://dev.ivoxa.ai").split(",")
-    CORS(app, resources={r"/api/*": {"origins": allowed_origins}})
+    CORS(app, resources={r"/*": {"origins": allowed_origins}})
 
     db.init_app(app)
     jwt.init_app(app)
     Swagger(app, config=SWAGGER_CONFIG, template=SWAGGER_TEMPLATE)
 
-    app.register_blueprint(auth_bp,  url_prefix="/api/auth")
-    app.register_blueprint(feed_bp,  url_prefix="/api/expenses/feed")
-    app.register_blueprint(fetch_bp, url_prefix="/api/expenses/fetch")
+    app.register_blueprint(auth_bp,  url_prefix="/auth")
+    app.register_blueprint(feed_bp,  url_prefix="/expenses/feed")
+    app.register_blueprint(fetch_bp, url_prefix="/expenses/fetch")
 
     with app.app_context():
         db.create_all()
